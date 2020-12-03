@@ -1,0 +1,15 @@
+version: "3.5"
+services:
+  web:
+    container_name: amul-cron-demo
+    working_dir: /var/www/html
+    restart: always
+    build:
+      context: .
+      dockerfile: DockerFile
+    ports:
+      - "93:80"
+    volumes:
+      - .:/var/www/html/
+    env_file:
+      - ./configurations/app.env

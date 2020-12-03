@@ -1,0 +1,26 @@
+# Source - https://github.com/docker-library/docs/tree/master/php#phpversion-apache
+FROM php:7.2-apache-stretch as php
+
+#install cron
+RUN apt-get update -y
+RUN apt-get install cron -y
+
+# Enable PHP 
+RUN apt-get install -y libwebp-dev libjpeg62-turbo-dev libpng-dev libxpm-dev \
+    libfreetype6-dev
+RUN docker-php-ext-configure gd --with-gd --with-webp-dir --with-jpeg-dir \
+    --with-png-dir --with-zlib-dir --with-xpm-dir --with-freetype-dir
+RUN docker-php-ext-install gd
+
+#make copy of cron-list
+COPY crons/cron-list /etc/cron.d/cron-list
+RUN chmod 0644 /etc/cron.d/cron-list
+RUN crontab /etc/cron.d/cron-list
+RUN touch /var/log/cron.log
+
+COPY . /var/www/html
+WORKDIR /var/www/html
+
+COPY start.sh /var/www/start.sh
+RUN chmod 0755 /var/www/start.sh
+ENTRYPOINT [ "/bin/bash", "/var/www/start.sh" ]

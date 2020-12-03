@@ -1,0 +1,4 @@
+#Enter cron commands below
+SHELL=/bin/bash
+BASH_ENV=/etc/profile.d/environmnets.sh 
+* * * * * /usr/local/bin/php /var/www/html/hello.php > /var/www/html/cron.log
